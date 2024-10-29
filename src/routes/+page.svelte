@@ -9,11 +9,11 @@
         responseData = ""; // Clear previous response
 
         try {
-            const res = await fetch( apiUrl, {
+            const res = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                }, 
+                },
                 body: JSON.stringify({ query }),
             });
 
@@ -40,7 +40,7 @@
 
 <h1 class="text-2xl mt-5 font-bold text-center mb-6 dark:text-gray-100">What Can I Help With?</h1>
 <div class="flex flex-col items-center justify-center max-h-screen">
-    <div class="mt-10 w-1/2 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700 dark:bg-gray-800">
+    <div class="mt-10 w-full sm:w-1/2 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700 dark:bg-gray-800">
         <form on:submit|preventDefault={fetchData} class="flex flex-col space-y-4">
             <textarea
                 bind:value={query}
@@ -53,7 +53,7 @@
         </form>
     </div>
 
-    <div class="mt-10 w-1/2 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700 dark:bg-gray-800">
+    <div class="mt-10 w-full sm:w-1/2 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700 dark:bg-gray-800">
         <h2 class="text-xl font-semibold mb-4 dark:text-gray-100">Response</h2>
         <div class="prose w-full h-96 overflow-scroll text-black dark:text-gray-100">
             {@html marked(responseData)}
