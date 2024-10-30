@@ -3,10 +3,13 @@
     const apiUrl = import.meta.env.VITE_API_URL;
 
     let query = "";
-    let responseData = ""; // Reactive variable for streaming data
+    let responseData = ""; // Variable reaktif untuk streaming data
+    let isFetching = false; // Menunjukkan apakah data sedang diambil
 
     async function fetchData() {
-        responseData = ""; // Clear previous response
+        if (isFetching) return; // Mencegah permintaan tambahan jika sedang mengambil data
+        responseData = ""; // Hapus respons sebelumnya
+        isFetching = true; // Atur status mengambil data
 
         try {
             const res = await fetch(apiUrl, {
@@ -21,11 +24,11 @@
                 throw new Error('Fetch failed!');
             }
 
-            // If response is in stream form
+            // Jika respons dalam bentuk stream
             const reader = res.body?.getReader();
             const decoder = new TextDecoder("utf-8");
 
-            // Read data from the stream
+            // Membaca data dari stream
             while (true) {
                 const { done, value } = await reader!.read();
                 if (done) break;
@@ -34,6 +37,8 @@
         } catch (error) {
             console.error('Error:', error);
             responseData = "An error occurred while fetching data.";
+        } finally {
+            isFetching = false; // Selesai mengambil data
         }
     }
 </script>
@@ -47,8 +52,12 @@
                 class="input textarea textarea-bordered textarea-lg w-full h-32 p-3 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:outline-none resize-none"
                 placeholder="Ask me anything..."
             ></textarea>
-            <button type="submit" class="btn btn-success w-full py-3 text-lg font-semibold bg-green-500 text-white rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300">
-                Send
+            <button
+                type="submit"
+                class="btn btn-success w-full py-3 text-lg font-semibold bg-green-500 text-white rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300"
+                disabled={isFetching}
+            >
+                {isFetching ? 'Loading...' : 'Send'}
             </button>
         </form>
     </div>
